@@ -269,6 +269,28 @@ export default function AIDetectPage() {
               </h3>
               <div className="score-bars">
                 {Object.entries(result.details)
+                  .filter(([key]) => {
+                    const hiddenKeys = new Set([
+                      "commenting",
+                      "burstiness",
+                      "comment_ratio",
+                      "documentation",
+                      "error_handling",
+                      "idiom_mismatch",
+                      "immutability_bias",
+                      "naming",
+                      "name_entropy",
+                      "ngram_entropy",
+                      "outdated_idioms",
+                      "over_modularization",
+                      "return_verbosity",
+                      "sequential_steps",
+                      "shallow_nesting",
+                      "style_drift",
+                      "type_hints",
+                    ]);
+                    return !hiddenKeys.has(key);
+                  })
                   .sort((a, b) => b[1] - a[1])
                   .map(([key, score]) => {
                     const label = key

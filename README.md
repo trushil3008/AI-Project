@@ -54,7 +54,9 @@ ai-plagiarism-detector/
 │
 ├── ai-service/                      # Python Flask Microservice
 │   ├── app.py                       # Flask app with /analyze endpoint
-│   └── requirements.txt             # Python dependencies
+│   ├── build_training_pairs.py       # Build labeled pairs from folders
+│   ├── requirements.txt             # Python dependencies
+│   └── sample_training_pairs.json   # Example calibrator training data
 │
 ├── .env.example                     # Environment template
 ├── .gitignore
@@ -102,6 +104,23 @@ pip install -r requirements.txt
 python app.py
 ```
 Python service runs on http://localhost:8000
+Note: the first run downloads the CodeBERT model weights.
+
+### 5. Train the AI Calibrator (Optional)
+
+The calibrator learns how to weight similarity signals using labeled pairs.
+
+```bash
+curl -X POST http://localhost:8000/train-calibrator \
+  -H "Content-Type: application/json" \
+  -d @sample_training_pairs.json
+```
+
+Check model status:
+
+```bash
+curl http://localhost:8000/model-info
+```
 
 ## 📡 API Endpoints
 
@@ -111,6 +130,16 @@ Python service runs on http://localhost:8000
 | GET    | `/api/results`    | Get all past comparison results    |
 | GET    | `/api/results/:id`| Get a specific result by ID        |
 | GET    | `/api/health`     | Health check                       |
+
+### AI Microservice Endpoints
+
+| Method | Endpoint              | Description                              |
+|--------|-----------------------|------------------------------------------|
+| POST   | `/analyze`            | Code similarity analysis                 |
+| POST   | `/detect-ai`          | AI-generated code detection              |
+| POST   | `/train-calibrator`   | Train similarity calibrator              |
+| GET    | `/model-info`         | Calibrator and embedding status          |
+| GET    | `/health`             | Health check                             |
 
 ### POST /api/compare
 
@@ -139,6 +168,9 @@ curl -X POST http://localhost:5000/api/compare \
 | Token Matching    | Jaccard similarity on unique token sets         | 25%    |
 | LCS               | Longest Common Subsequence on code lines        | 35%    |
 
+The Python microservice uses additional signals including winnowing, pattern
+analysis, transformer embeddings, and an optional trained calibrator.
+
 ### Verdict Thresholds
 - **Low**: < 30% overall similarity
 - **Medium**: 30% – 60% overall similarity
@@ -157,4 +189,4 @@ PYTHON_SERVICE_URL=http://localhost:8000
 - **Frontend**: React 19, Vite, React Router, Axios, react-dropzone
 - **Backend**: Node.js, Express, Mongoose, Multer
 - **Database**: MongoDB
-- **AI Service**: Python, Flask, scikit-learn, difflib
+- **AI Service**: Python, Flask, transformers, torch, difflib

@@ -1,0 +1,24 @@
+{
+  "pairs": [
+    {
+      "code1": "function add(a, b) {\n  return a + b;\n}\n",
+      "code2": "const sum = (x, y) => {\n  return x + y;\n};\n",
+      "label": 1
+    },
+    {
+      "code1": "def factorial(n):\n    result = 1\n    for i in range(2, n + 1):\n        result *= i\n    return result\n",
+      "code2": "def fact(num):\n    acc = 1\n    for i in range(2, num + 1):\n        acc *= i\n    return acc\n",
+      "label": 1
+    },
+    {
+      "code1": "function quicksort(arr) {\n  if (arr.length <= 1) return arr;\n  const pivot = arr[0];\n  const left = arr.slice(1).filter(x => x < pivot);\n  const right = arr.slice(1).filter(x => x >= pivot);\n  return [...quicksort(left), pivot, ...quicksort(right)];\n}\n",
+      "code2": "def fibonacci(n):\n    if n <= 1:\n        return n\n    return fibonacci(n - 1) + fibonacci(n - 2)\n",
+      "label": 0
+    },
+    {
+      "code1": "import math\n\ndef area(r):\n    return math.pi * r * r\n",
+      "code2": "function reverseString(s) {\n  return s.split('')\n    .reverse()\n    .join('');\n}\n",
+      "label": 0
+    }
+  ]
+}
